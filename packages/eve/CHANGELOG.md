@@ -1,5 +1,23 @@
 # eve
 
+## 1.0.0-rc.2
+
+Released 2026-11-02 · [Compare with 1.0.0-rc.1](https://github.com/vercel/eve/compare/eve%401.0.0-rc.1...eve%401.0.0-rc.2)
+
+### Features
+
+- Slack sends a person's edit to a message the agent serves to that thread's session, as a `<slack_message_edit>` with a diff of the changed lines and the full edited text, and `slackChannel({ onMessageEdited })` decides which edits reach the agent.
+  An edit follows the channel's `turnPolicy` like any message: by default it joins a running turn, and if the agent already replied, it starts a new turn, which shows no thread status until its first tool call finishes; add the `no_reply` tool so the agent can stay quiet when an edit changes nothing. By default, eve sends edits to DMs, code channel messages, and messages that mention the agent before or after the edit. With an authored `onAppMention`, `onDirectMessage`, or `onMessage`, edits need their own `onMessageEdited`, so they can't skip those hooks' checks; until then they go to `onEvent` or are dropped.
+  The generated Slack app manifest now subscribes to the `message.channels`, `message.groups`, `message.im`, and `message.mpim` events and adds the `channels:history`, `groups:history`, `im:history`, and `mpim:history` scopes, which Slack requires to send edits. Reinstall the Slack app to grant them. With these events, the default handler also answers DMs without extra setup, and an authored `onEvent` receives every message event in channels the app has joined. ([#5796](https://github.com/vercel/eve/pull/5796))
+
+### Bug Fixes
+
+- `eve dev` now resolves a string agent model through a custom `globalThis.AI_SDK_DEFAULT_PROVIDER`, as `eve start` does, instead of routing it to the local AI Gateway connection. ([#5789](https://github.com/vercel/eve/pull/5789))
+- Only sign-ins the runtime starts can hold a turn.
+  A tool result shaped like a sign-in request, such as JSON from an MCP or OpenAPI connection, no longer opens a sign-in or changes who the turn runs as. ([#5790](https://github.com/vercel/eve/pull/5790))
+- Deliver Slack DM thread replies posted with "Also send to direct message" to the agent.
+  Thanks @dohooo for reporting this in #5774. ([#5776](https://github.com/vercel/eve/pull/5776))
+
 ## 1.0.0-rc.1
 
 Released 2026-10-31 · [Compare with 1.0.0-rc.0](https://github.com/vercel/eve/compare/eve%401.0.0-rc.0...eve%401.0.0-rc.1)
