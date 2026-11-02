@@ -9,6 +9,7 @@ import {
 } from "./connection-setup";
 import { getIntegration } from "./data";
 import { integrationMarkdown } from "./discovery";
+import loootConnection from "../../registry/connections/looot";
 import sentConnection from "../../registry/connections/sent";
 
 // Connect's runtime pulls in channel auth; these tests exercise only the authored approval policy.
@@ -56,6 +57,34 @@ describe("Firecrawl connection setup", () => {
     );
 
     expect(getIntegration("firecrawl")!.quickStart).toContain(source.trim());
+  });
+});
+
+describe("looot connection setup", () => {
+  it("renders bearer authentication without Connect", () => {
+    const integration = getIntegration("looot")!;
+
+    expect(integration.quickStart).toContain("Authorization: `Bearer ${process.env.LOOOT_TOKEN!}`");
+    expect(integration.quickStart).not.toContain("@vercel/connect");
+    expect(buildConnectionInstall(integration)).toContain("eve add connection/looot");
+  });
+
+  it("shows the installed connection file in the gallery", () => {
+    const source = readFileSync(
+      new URL("../../registry/connections/looot.ts", import.meta.url),
+      "utf8",
+    );
+
+    expect(getIntegration("looot")!.quickStart).toContain(source.trim());
+  });
+
+  it("requires approval only for paid tools", () => {
+    const approval = loootConnection.approval as (input: { toolName: string }) => string;
+
+    expect(approval({ toolName: "looot__run" })).toBe("user-approval");
+    expect(approval({ toolName: "looot__discover_smart" })).toBe("user-approval");
+    expect(approval({ toolName: "looot__search" })).toBe("not-applicable");
+    expect(approval({ toolName: "looot__top_up" })).toBe("not-applicable");
   });
 });
 

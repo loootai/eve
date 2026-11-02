@@ -664,6 +664,18 @@ export const INTEGRATIONS: readonly IntegrationEntry[] = [
     },
   },
   {
+    slug: "looot",
+    name: "looot",
+    kind: "connection",
+    tagline: "Search, price and run pay-per-call data endpoints from one prepaid balance.",
+    surfaces: { scaffoldable: false, registry: true, gallery: true },
+    connection: {
+      description:
+        "looot: search, price and run pay-per-call data endpoints (email find and verify, company enrichment, SEO and SERP, social profiles, web scraping) through one MCP server and one prepaid balance.",
+      mcp: { url: "https://api.looot.ai/mcp" },
+    },
+  },
+  {
     slug: "make",
     name: "Make",
     kind: "connection",

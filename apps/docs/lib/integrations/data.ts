@@ -2428,6 +2428,50 @@ Keep the API key in a server-side environment variable. eve sends it directly to
     keywords: ["mcp", "local seo", "rankings", "ai visibility", "oauth", "connect"],
     authModes: ["user"],
   },
+  looot: {
+    logo: "looot",
+    docsHref: "https://docs.looot.ai",
+    keywords: [
+      "mcp",
+      "data",
+      "email finder",
+      "email verification",
+      "company enrichment",
+      "seo",
+      "serp",
+      "web scraping",
+      "pay per call",
+    ],
+    authModes: ["apiKey"],
+    apiKey: {
+      env: "LOOOT_TOKEN",
+      header: "Authorization",
+    },
+    quickStart: `Create \`agent/connections/looot.ts\`. The filename creates the \`looot\` connection. Searching and inspecting the catalog is free, while \`run\` and \`discover_smart\` spend from the workspace's prepaid balance, so those two tools require approval:
+
+\`\`\`ts
+import { defineMcpClientConnection } from "eve/connections";
+
+const APPROVAL_REQUIRED = new Set(["run", "discover_smart"]);
+
+export default defineMcpClientConnection({
+  url: "https://api.looot.ai/mcp",
+  description:
+    "looot: search, price and run pay-per-call data endpoints (email find and verify, company enrichment, SEO and SERP, social profiles, web scraping) through one MCP server and one prepaid balance.",
+  headers: () => ({
+    Authorization: \`Bearer \${process.env.LOOOT_TOKEN!}\`,
+  }),
+  approval: ({ toolName }) =>
+    APPROVAL_REQUIRED.has(toolName.split("__").pop() ?? toolName)
+      ? "user-approval"
+      : "not-applicable",
+});
+\`\`\`
+
+Keep the token in a server-side environment variable. eve sends it directly to looot and does not expose it to the model.`,
+    configureNote:
+      "Create an agent token in looot under Settings, Agent tokens, with at least the catalog.read, runs.read, and runs.execute scopes. New workspaces start with no credit. The balance tool reports the minimum top-up, and top_up returns a payment link. Paid calls settle from the prepaid balance, so keep approval enabled on run and discover_smart.",
+  },
   make: {
     logo: "make",
     docsHref: "/docs/connections/mcp",

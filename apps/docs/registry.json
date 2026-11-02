@@ -1295,6 +1295,22 @@
       ]
     },
     {
+      "name": "connection/looot",
+      "type": "registry:item",
+      "title": "looot",
+      "description": "Search, price and run pay-per-call data endpoints from one prepaid balance.",
+      "envVars": {
+        "LOOOT_TOKEN": ""
+      },
+      "files": [
+        {
+          "path": "registry/connections/looot.ts",
+          "type": "registry:file",
+          "target": "agent/connections/looot.ts"
+        }
+      ]
+    },
+    {
       "name": "connection/make",
       "type": "registry:item",
       "title": "Make",

@@ -639,6 +639,19 @@ const localFalconLogo = (props: LogoProps) => (
   </svg>
 );
 
+const loootLogo = (props: LogoProps) => (
+  <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <circle cx="5.6" cy="16" r="4.1" fill="none" stroke="rgb(0,147,98)" strokeWidth="2.6" />
+    <defs>
+      <pattern id="looot-bars" patternUnits="userSpaceOnUse" x="0" y="9" width="32" height="3.027">
+        <rect width="32" height="1.892" fill="rgb(0,147,98)" />
+      </pattern>
+    </defs>
+    <circle cx="16" cy="16" r="5.4" fill="none" stroke="url(#looot-bars)" strokeWidth="3.2" />
+    <circle cx="26.4" cy="16" r="4.1" fill="none" stroke="rgb(0,147,98)" strokeWidth="2.6" />
+  </svg>
+);
+
 const manufactLogo = (props: LogoProps) => (
   <svg fill="none" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" {...props}>
     <rect fill="black" height="1000" rx="500" width="1000" />
@@ -1146,6 +1159,7 @@ export const logos = {
   firecrawl: firecrawlLogo,
   "hugging-face": huggingFaceLogo,
   "local-falcon": localFalconLogo,
+  looot: loootLogo,
   make: makeLogo,
   manufact: manufactLogo,
   mem0: mem0Logo,
