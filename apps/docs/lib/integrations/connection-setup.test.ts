@@ -78,14 +78,21 @@ describe("looot connection setup", () => {
     expect(getIntegration("looot")!.quickStart).toContain(source.trim());
   });
 
-  it("requires approval only for paid tools", () => {
+  it("requires approval for every tool outside the read-only list", () => {
     const approval = loootConnection.approval as (input: { toolName: string }) => string;
 
-    expect(approval({ toolName: "looot__run" })).toBe("user-approval");
-    expect(approval({ toolName: "looot__discover_smart" })).toBe("user-approval");
-    expect(approval({ toolName: "looot__media_link" })).toBe("user-approval");
     expect(approval({ toolName: "looot__search" })).toBe("not-applicable");
-    expect(approval({ toolName: "looot__top_up" })).toBe("not-applicable");
+    expect(approval({ toolName: "looot__balance" })).toBe("not-applicable");
+    for (const toolName of [
+      "run",
+      "discover_smart",
+      "media_link",
+      "runs_cancel",
+      "feedback",
+      "new_tool",
+    ]) {
+      expect(approval({ toolName: `looot__${toolName}` })).toBe("user-approval");
+    }
   });
 });
 

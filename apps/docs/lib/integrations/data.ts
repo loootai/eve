@@ -2447,12 +2447,24 @@ Keep the API key in a server-side environment variable. eve sends it directly to
       env: "LOOOT_TOKEN",
       header: "Authorization",
     },
-    quickStart: `Create \`agent/connections/looot.ts\`. The filename creates the \`looot\` connection. Searching and inspecting the catalog is free, while \`run\`, \`discover_smart\`, and \`media_link\` can spend from the workspace's prepaid balance, so those tools require approval:
+    quickStart: `Create \`agent/connections/looot.ts\`. The filename creates the \`looot\` connection. Known read-only tools, such as catalog search and run history, run without an approval prompt. Every other tool requires user approval, including \`run\` and \`discover_smart\`, which spend from the workspace's prepaid balance, and any tool looot adds later:
 
 \`\`\`ts
 import { defineMcpClientConnection } from "eve/connections";
 
-const APPROVAL_REQUIRED = new Set(["run", "discover_smart", "media_link"]);
+const READ_ONLY_TOOLS = new Set([
+  "balance",
+  "catalog_overview",
+  "discover",
+  "inspect",
+  "my_tools",
+  "runs_evidence",
+  "runs_get",
+  "runs_list",
+  "search",
+  "search_catalog",
+  "skills",
+]);
 
 export default defineMcpClientConnection({
   url: "https://api.looot.ai/mcp",
@@ -2462,15 +2474,15 @@ export default defineMcpClientConnection({
     Authorization: \`Bearer \${process.env.LOOOT_TOKEN!}\`,
   }),
   approval: ({ toolName }) =>
-    APPROVAL_REQUIRED.has(toolName.split("__").pop() ?? toolName)
-      ? "user-approval"
-      : "not-applicable",
+    READ_ONLY_TOOLS.has(toolName.split("__").pop() ?? toolName)
+      ? "not-applicable"
+      : "user-approval",
 });
 \`\`\`
 
 Keep the token in a server-side environment variable. eve sends it directly to looot and does not expose it to the model.`,
     configureNote:
-      "Create an agent token in looot under Settings, Agent tokens, with at least the catalog.read, runs.read, and runs.execute scopes. New workspaces start with no credit. The balance tool reports the minimum top-up, and top_up returns a payment link. Paid calls settle from the prepaid balance, so keep approval enabled on run, discover_smart, and media_link.",
+      "Create an agent token in looot under Settings, Agent tokens, with the catalog.read, runs.read, runs.execute, and usage.read scopes. The balance tool needs usage.read. New workspaces start with no credit. The balance tool reports the minimum top-up, and top_up returns a payment link after approval. Paid calls settle from the prepaid balance, so keep approval enabled for every tool outside the read-only list.",
   },
   make: {
     logo: "make",

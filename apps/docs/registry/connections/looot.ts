@@ -1,6 +1,18 @@
 import { defineMcpClientConnection } from "eve/connections";
 
-const APPROVAL_REQUIRED = new Set(["run", "discover_smart", "media_link"]);
+const READ_ONLY_TOOLS = new Set([
+  "balance",
+  "catalog_overview",
+  "discover",
+  "inspect",
+  "my_tools",
+  "runs_evidence",
+  "runs_get",
+  "runs_list",
+  "search",
+  "search_catalog",
+  "skills",
+]);
 
 export default defineMcpClientConnection({
   url: "https://api.looot.ai/mcp",
@@ -10,7 +22,7 @@ export default defineMcpClientConnection({
     Authorization: `Bearer ${process.env.LOOOT_TOKEN!}`,
   }),
   approval: ({ toolName }) =>
-    APPROVAL_REQUIRED.has(toolName.split("__").pop() ?? toolName)
-      ? "user-approval"
-      : "not-applicable",
+    READ_ONLY_TOOLS.has(toolName.split("__").pop() ?? toolName)
+      ? "not-applicable"
+      : "user-approval",
 });
