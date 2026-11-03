@@ -83,6 +83,7 @@ describe("looot connection setup", () => {
 
     expect(approval({ toolName: "looot__run" })).toBe("user-approval");
     expect(approval({ toolName: "looot__discover_smart" })).toBe("user-approval");
+    expect(approval({ toolName: "looot__media_link" })).toBe("user-approval");
     expect(approval({ toolName: "looot__search" })).toBe("not-applicable");
     expect(approval({ toolName: "looot__top_up" })).toBe("not-applicable");
   });

@@ -1,6 +1,6 @@
 import { defineMcpClientConnection } from "eve/connections";
 
-const APPROVAL_REQUIRED = new Set(["run", "discover_smart"]);
+const APPROVAL_REQUIRED = new Set(["run", "discover_smart", "media_link"]);
 
 export default defineMcpClientConnection({
   url: "https://api.looot.ai/mcp",
